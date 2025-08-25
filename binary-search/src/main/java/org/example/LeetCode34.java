@@ -7,25 +7,40 @@ public class LeetCode34 {
 
 
     public static int[] searchRange(int[] nums, int target) {
+        // 查找目标值的左边界（第一次出现的位置）
         int leftIdx = binarySearch(nums, target, true);
+        // 查找目标值的右边界（最后一次出现的位置的下一个位置）再减1
         int rightIdx = binarySearch(nums, target, false) - 1;
+        // 判断找到的边界是否有效：左边界小于等于右边界，右边界在数组范围内，且左右边界对应的值都等于目标值
         if (leftIdx <= rightIdx && rightIdx < nums.length && nums[leftIdx] == target && nums[rightIdx] == target) {
+            // 返回找到的目标值范围
             return new int[]{leftIdx, rightIdx};
         }
+        // 未找到目标值，返回[-1, -1]
         return new int[]{-1, -1};
     }
 
     public static int binarySearch(int[] nums, int target, boolean lower) {
+        // 初始化二分查找的左右边界和结果值
         int left = 0, right = nums.length - 1, ans = nums.length;
+        // 二分查找循环，当左边界小于等于右边界时继续
         while (left <= right) {
+            // 计算中间位置
             int mid = (left + right) / 2;
+            // 根据lower参数决定查找策略：
+            // 若lower为true，寻找第一个大于等于target的位置
+            // 若lower为false，寻找第一个大于target的位置
             if (nums[mid] > target || (lower && nums[mid] >= target)) {
+                // 目标在左半部分，更新右边界
                 right = mid - 1;
+                // 更新可能的答案
                 ans = mid;
             } else {
+                // 目标在右半部分，更新左边界
                 left = mid + 1;
             }
         }
+        // 返回找到的位置
         return ans;
     }
 
